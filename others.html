@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Others Products</title>
+    <link rel="stylesheet" href="styles.css">
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-storage.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js"></script>
+</head>
+<body>
+
+    <div class="container">
+        <h2>Other Products</h2>
+        <button class="add-product-btn" onclick="openModal()">Add Product</button>
+
+        <div class="modal" id="productModal">
+            <div class="modal-content">
+                <span class="close" onclick="closeModal()">&times;</span>
+                <h3>Add New Product</h3>
+                <div class="form-group">
+                    <input type="text" id="productTitle" placeholder="Product Name">
+                </div>
+                <div class="form-group">
+                    <input type="text" id="productPrice" placeholder="Price">
+                </div>
+                <div class="form-group">
+                    <input type="file" id="productImage">
+                </div>
+                <button class="add-product-btn" onclick="addProduct()">Add Product</button>
+            </div>
+        </div>
+
+        <div class="product-container" id="productContainer"></div>
+    </div>
+
+    <script type="module">
+        // Import the functions you need from the SDKs you need
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.3.1/firebase-app.js";
+        import { getAnalytics } from "https://www.gstatic.com/firebasejs/11.3.1/firebase-analytics.js";
+        // TODO: Add SDKs for Firebase products that you want to use
+        // https://firebase.google.com/docs/web/setup#available-libraries
+      
+        // Your web app's Firebase configuration
+        // For Firebase JS SDK v7.20.0 and later, measurementId is optional
+        const firebaseConfig = {
+          apiKey: "AIzaSyAqhz6d8g0MGWWn6ewIHhqAYLSTUAeOhD8",
+          authDomain: "vegetable-ordering-app.firebaseapp.com",
+          projectId: "vegetable-ordering-app",
+          storageBucket: "vegetable-ordering-app.firebasestorage.app",
+          messagingSenderId: "505175136174",
+          appId: "1:505175136174:web:e74ae42060809b1b8c9a3f",
+          measurementId: "G-V4ES2JLTEF"
+        };
+      
+        // Initialize Firebase
+        const app = initializeApp(firebaseConfig);
+        const analytics = getAnalytics(app);
+    
+        const storage = firebase.storage();
+        const db = firebase.firestore();
+
+        function openModal() {
+            document.getElementById("productModal").style.display = "block";
+        }
+
+        function closeModal() {
+            document.getElementById("productModal").style.display = "none";
+        }
+
+        function addProduct() {
+            const title = document.getElementById("productTitle").value;
+            const price = document.getElementById("productPrice").value;
+            const imageInput = document.getElementById("productImage").files[0];
+
+            if (!title || !price || !imageInput) {
+                alert("Please fill all fields!");
+                return;
+            }
+
+            const storageRef = storage.ref('products/' + imageInput.name);
+            const uploadTask = storageRef.put(imageInput);
+
+            uploadTask.on('state_changed', 
+                function(snapshot) {
+                    // Progress handling (optional)
+                }, 
+                function(error) {
+                    console.error("Upload failed:", error);
+                }, 
+                function() {
+                    uploadTask.snapshot.ref.getDownloadURL().then(function(downloadURL) {
+                        db.collection("products").add({
+                            title: title,
+                            price: price,
+                            image: downloadURL
+                        }).then(() => {
+                            loadProducts();
+                            closeModal();
+                        }).catch(error => console.error("Error adding product:", error));
+                    });
+                }
+            );
+        }
+
+        function loadProducts() {
+            const productContainer = document.getElementById("productContainer");
+            productContainer.innerHTML = "";
+
+            db.collection("products").get().then(snapshot => {
+                snapshot.forEach(doc => {
+                    const product = doc.data();
+                    let productCard = document.createElement("div");
+                    productCard.classList.add("product-card");
+                    productCard.innerHTML = `
+                        <img src="${product.image}" alt="Product Image">
+                        <h4>${product.title}</h4>
+                        <p>$${product.price}</p>
+                        <button class="delete" onclick="deleteProduct('${doc.id}')">Delete</button>
+                    `;
+                    productContainer.appendChild(productCard);
+                });
+            });
+        }
+
+        function deleteProduct(productId) {
+            db.collection("products").doc(productId).delete().then(() => {
+                loadProducts();
+            }).catch(error => console.error("Error deleting product:", error));
+        }
+
+        document.addEventListener("DOMContentLoaded", loadProducts);
+    </script>
+</body>
+</html>

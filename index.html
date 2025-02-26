@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Panel</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+    <div class="sidebar">
+        <h2>Admin Panel</h2>
+        <ul>
+            <li><a href="#" class="active">Dashboard</a></li>
+        
+            <li class="dropdown">
+                <a href="#" class="dropbtn">Product Categories</a>
+                <div class="dropdown-content">
+                    <a href="exotic.html">Exotic</a>
+                    <a href="dairy.html">Dairy Products</a>
+                    <a href="dryfruits.html">Dry Fruits</a>
+                    <a href="frozen.html">Frozen Products</a>
+                    <a href="others.html">Others</a>
+                </div>
+            </li>
+            <li><a href="#">Orders</a></li>
+            <li><a href="#">Customers</a></li>
+        </ul>
+    </div>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            const dropdown = document.querySelector(".dropbtn");
+            const dropdownContent = document.querySelector(".dropdown-content");
+            
+            dropdown.addEventListener("click", function(event) {
+                event.preventDefault();
+                dropdownContent.classList.toggle("show");
+            });
+
+            window.addEventListener("click", function(event) {
+                if (!dropdown.contains(event.target)) {
+                    dropdownContent.classList.remove("show");
+                }
+            });
+        });
+    </script>
+
+
+    <div class="main-content">
+        <header>
+            <h2>Swastik Krushi Seva Kendra, Ashta</h2>
+            <div class="profile">
+                <span>r</span>
+            </div>
+        </header><br>
+        <div class="search-bar">
+            <input type="text" placeholder="Type Your Products ...">&nbsp;&nbsp;
+            <button><i class="fas fa-search"></i> Search</button>
+        </div>
+
+        <section class="dashboard-cards">
+            &nbsp; &nbsp;
+            <div class="card blue">
+                <h3>6</h3>
+                <p>Products</p>
+            </div>
+            <div class="card green">
+                <h3>0</h3>
+                <p>Customers</p>
+            </div>
+            <div class="card orange">
+                <h3>44</h3>
+                <p>Product Categories</p>
+            </div>
+            <div class="card red">
+                <h3>44</h3>
+                <p>Orders</p>
+            </div>
+        </section>
+
+        <section class="products-table">
+            <h3>View Products</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Product ID</th>
+                        <th>Title</th>
+                        <th>Image</th>
+                        <th>Price</th>
+                        <th>Keyword</th>
+                        <th>Date</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>1</td>
+                        <td>Red Capsicums</td>
+                        <td><img src="Red Capsicums.jpg" alt="Red Capsicums"></td>
+                        <td>299</td>
+                        <td>new arrival</td>
+                        <td>2021-08-26</td>
+                        <td>
+                            <button class="edit">Edit</button>
+                            <button class="delete">Delete</button>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>2</td>
+                        <td>Yellow Capsicums</td>
+                        <td><img src="towel.jpg" alt="Yellow Capsicums"></td>
+                        <td>799</td>
+                        <td>Makhmal</td>
+                        <td>2021-08-26</td>
+                        <td>
+                            <button class="edit">Edit</button>
+                            <button class="delete">Delete</button>
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <td>2</td>
+                        <td>Green Capsicums</td>
+                        <td><img src="towel.jpg" alt="Green Capsicums"></td>
+                        <td>799</td>
+                        <td>Makhmal</td>
+                        <td>2021-08-26</td>
+                        <td>
+                            <button class="edit">Edit</button>
+                            <button class="delete">Delete</button>
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <td>2</td>
+                        <td>Red Capsicums</td>
+                        <td><img src="towel.jpg" alt="Red Capsicums"></td>
+                        <td>799</td>
+                        <td>Makhmal</td>
+                        <td>2021-08-26</td>
+                        <td>
+                            <button class="edit">Edit</button>
+                            <button class="delete">Delete</button>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
